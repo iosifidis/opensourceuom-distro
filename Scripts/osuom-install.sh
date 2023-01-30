@@ -12,8 +12,10 @@ fi
 install_repo_package() {
   if [ "$OS" == "Fedora" ]; then
     sudo dnf install -y $1
-  elif [ "$OS" == "openSUSE" ]; then
+  elif [ "$OS" == "openSUSE Tumbleweed" ]; then
     sudo zypper install -y $1
+  elif [ "$OS" == "openSUSE Leap" ]; then
+    sudo zypper install -y $1  
   elif [ "$OS" == "Ubuntu" ]; then
     sudo apt-get update
     sudo apt-get install -y $1

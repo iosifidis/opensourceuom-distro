@@ -1,4 +1,4 @@
-# Distribution of Open Source Universito of Macedonia
+# Distribution of Open Source University of Macedonia
 
 I will make an effort to write some scripts.
 
