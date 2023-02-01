@@ -1,25 +1,46 @@
 #!/bin/bash
 
-# Detect the Linux distribution
-if [ -f /etc/os-release ]; then
-  . /etc/os-release
-  OS=$NAME
+# get the distribution name
+distro=$(lsb_release -is)
+
+if [ $distro == "Fedora" ] || [ $distro == "openSUSE" ]; then
+  # check if flatpak is installed in Fedora or openSUSE
+  if ! command -v flatpak > /dev/null 2>&1; then
+    # ask the user if they want to install flatpak
+    install_flatpak=$(zenity --title="Install Flatpak" --width=300 --height=100 \
+      --question --text="Flatpak is not installed. Do you want to install it?")
+    if [ $install_flatpak == "0" ]; then
+      # install flatpak
+      if [ $distro == "Fedora" ]; then
+        sudo dnf install flatpak -y
+      else
+        sudo zypper install flatpak -y
+      fi
+    fi
+  fi
 else
-  OS=$(uname -s)
+  # check if flatpak is installed in Ubuntu
+  if ! command -v flatpak > /dev/null 2>&1; then
+    # ask the user if they want to install flatpak
+    install_flatpak=$(zenity --title="Install Flatpak" --width=300 --height=100 \
+      --question --text="Flatpak is not installed. Do you want to install it?")
+    if [ $install_flatpak == "0" ]; then
+      # install flatpak
+      sudo apt-get install flatpak -y
+    fi
+  fi
 fi
 
 # Function to install packages from repositories
 install_repo_package() {
-  if [ "$OS" == "Fedora" ]; then
+  if [ "$distro" == "Fedora" ]; then
     sudo dnf install -y $1
-  elif [ "$OS" == "openSUSE Tumbleweed" ]; then
+  elif [ "$distro" == "openSUSE" ]; then
     sudo zypper install -y $1
-  elif [ "$OS" == "openSUSE Leap" ]; then
-    sudo zypper install -y $1  
-  elif [ "$OS" == "Ubuntu" ]; then
+  elif [ "$distro" == "Ubuntu" ]; then
     sudo apt-get update
     sudo apt-get install -y $1
-  elif [ "$OS" == "Arch Linux" ]; then
+  elif [ "$distro" == "EndeavourOS" ]; then
     sudo pacman -S $1 --noconfirm
   fi
 }
