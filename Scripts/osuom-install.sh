@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Efstathios Iosifidis
+# @eiosifidis
+
 # get the distribution name
 distro=$(lsb_release -is)
 
@@ -72,6 +75,7 @@ SELECTION=$(zenity --list --checklist \
   --column "Select" --column "Package" \
   FALSE "dia" \
   FALSE "git" \
+  FALSE "dbeaver" \
   FALSE "gitkraken" \
   FALSE "blender" \
   FALSE "vscode" \
@@ -96,6 +100,13 @@ for package in $SELECTION; do
     git)
       install_repo_package "git"
       ;;
+    dbeaver)
+      if [ "$distro" == "Ubuntu" ]; then
+    	  sudo snap install dbeaver-ce
+      else
+      	install_flatpak_package "io.dbeaver.DBeaverCommunity"
+      fi
+      ;;  
     gitkraken)
       if [ "$distro" == "Ubuntu" ]; then
     	  sudo snap install gitkraken --classic
